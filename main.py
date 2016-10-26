@@ -6,6 +6,7 @@ from google.cloud import storage
 
 import jinja2 
 
+import noaa
 import nwac
 
 app = Flask(__name__)
@@ -29,6 +30,15 @@ def upload_html():
 @app.route('/')
 def home():
     return fetch()
+
+@app.route('/noaa')
+def noaa_debug():
+	return str(noaa.fetch())
+
+@app.route('/nwac')
+def nwac_debug():
+	return nwac.fetch()
+	
 
 # This is used when running locally. Gunicorn is used to run the
 # application on Google App Engine. See entrypoint in app.yaml.
