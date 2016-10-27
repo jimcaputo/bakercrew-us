@@ -1,0 +1,19 @@
+<div>
+    NWAC data
+    <table>
+        <tbody>
+            <tr>
+                <td>NWAC Time</td>
+                <td>Temp 5020'</td>
+                <td>Temp 4210'</td>
+            </tr>
+            {% for row in nwac_data %}
+            <tr>
+                <td>{{ row.nwac_time }}</td>
+                <td>{{ row.temperature_5000 }}</td>
+                <td>{{ row.temperature_4200 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

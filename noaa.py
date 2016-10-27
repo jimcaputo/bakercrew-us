@@ -1,4 +1,4 @@
-import logging
+import json
 import string
 import urllib.request
 import xml.etree.ElementTree 
@@ -27,7 +27,6 @@ def fetch():
     forecast_creation_time = datetime.strptime(
         root.find('forecastCreationTime').text, '%a %b %d %H:%M:%S %Y %Z')
     forecast_creation_time -= timedelta(hours=constants.TZ_OFFSET)
-    forecast_creation_time_str = forecast_creation_time.strftime('%Y-%m-%d %H:%M:%S UTC')
 
     latitude = str.rstrip(root.find('latitude').text, '\n')
     longitude = str.rstrip(root.find('longitude').text, '\n')
@@ -44,8 +43,13 @@ def fetch():
             forecast_time = datetime.strptime(datetime_str, '%b %d %H:%M:%S %Y %Z')
             forecast_time -= timedelta(hours=constants.TZ_OFFSET)
 
+            # NOAA includes forecast info for times prior to the actual forecast creation time.
+            # Just need to discard these.
+            if forecast_time < forecast_creation_time:
+                continue
+
             rows.append({
-                'forecast_creation_time': forecast_creation_time_str,
+                'forecast_creation_time': forecast_creation_time.strftime('%Y-%m-%d %H:%M:%S UTC'),
                 'latitude': latitude,
                 'longitude': longitude,
                 'elevation': elevation,
@@ -63,7 +67,7 @@ def fetch():
                 'relative_humidity': period.find('rh').text,
                 'sky_cover': period.find('skyCover').text
             })                
-    return rows
+    return json.dumps({'noaa_data': rows})
 
 
 def parseWeather(wx):

@@ -1,0 +1,19 @@
+<div>
+    NOAA data
+    <table>
+        <tbody>
+            <tr>
+                <td>Forecast Time</td>
+                <td>Weather</td>
+                <td>Temperature</td>
+            </tr>
+            {% for row in noaa_data %}
+            <tr>
+                <td>{{ row.forecast_time }}</td>
+                <td>{{ row.weather }}</td>
+                <td>{{ row.temperature }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
