@@ -1,5 +1,33 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+        var data = google.visualization.arrayToDataTable([
+            ['Time', 'Temperature 4200 ft'],
+            {% for row in nwac_data %}
+            ['{{ row.nwac_time_display}}', {{row.temperature_4200}}],
+            {% endfor %}
+        ]);
+
+        var options = {
+            title: 'Temperature 4200 ft',
+            legend: {position: 'none'},
+            hAxis: {
+                showTextEvery: 3,
+                slantedText: true
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('nwac_chart'));
+        chart.draw(data, options);
+    }
+</script>
+
 <div>
     NWAC data
+    <div id="nwac_chart" style="width: 800px; height: 500px"></div>
     <table>
         <tbody>
             <tr>

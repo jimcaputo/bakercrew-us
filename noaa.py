@@ -1,7 +1,7 @@
 import json
 import string
 import urllib.request
-import xml.etree.ElementTree 
+import xml.etree.ElementTree
 
 from datetime import datetime
 from datetime import timedelta
@@ -38,9 +38,9 @@ def fetch():
     i = 0
     for day in root.findall('forecastDay'):
         for period in day.findall('period'):
-            datetime_str = '{} {}:00:00 {} UTC'.format(
+            datetime_str = '{} {}:00:00 {}'.format(
                 day.find('validDate').text, period.find('validTime').text, year)
-            forecast_time = datetime.strptime(datetime_str, '%b %d %H:%M:%S %Y %Z')
+            forecast_time = datetime.strptime(datetime_str, '%b %d %H:%M:%S %Y')
             forecast_time -= timedelta(hours=constants.TZ_OFFSET)
 
             # NOAA includes forecast info for times prior to the actual forecast creation time.
@@ -49,11 +49,11 @@ def fetch():
                 continue
 
             rows.append({
-                'forecast_creation_time': forecast_creation_time.strftime('%Y-%m-%d %H:%M:%S UTC'),
+                'forecast_creation_time': forecast_creation_time.strftime('%Y-%m-%d %H:%M:%S'),
                 'latitude': latitude,
                 'longitude': longitude,
                 'elevation': elevation,
-                'forecast_time': forecast_time.strftime('%Y-%m-%d %H:%M:%S UTC'),
+                'forecast_time': forecast_time.strftime('%Y-%m-%d %H:%M:%S'),
                 'weather': parseWeather(period.find('wx').text),
                 'temperature': period.find('temperature').text,
                 'chance_of_precip': period.find('pop').text,
@@ -66,7 +66,7 @@ def fetch():
                 'dewpoint': period.find('dewpoint').text,
                 'relative_humidity': period.find('rh').text,
                 'sky_cover': period.find('skyCover').text
-            })                
+            })
     return json.dumps({'noaa_data': rows})
 
 
@@ -79,7 +79,7 @@ def parseWeather(wx):
         return 'Chance of Snow Showers'
     elif wx == 'Chc RW':
         return 'Chance of Rain Showers'
-        
+
     elif wx == 'Def R':
         return 'Rain'
     elif wx == 'Def RW':
@@ -87,8 +87,8 @@ def parseWeather(wx):
     elif wx == 'Def S':
         return 'Snow'
     elif wx == 'Def SW':
-        return 'Snow Showers'    
-    
+        return 'Snow Showers'
+
     elif wx == 'Lkly R':
         return 'Rain Likely'
     elif wx == 'Lkly RW':
@@ -97,5 +97,5 @@ def parseWeather(wx):
         return 'Snow Likely'
     elif wx == 'Lkly SW':
         return 'Snow Showers Likely'
-    
-    return wx 
+
+    return wx
