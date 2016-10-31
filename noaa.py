@@ -67,7 +67,7 @@ def fetch():
                 'relative_humidity': period.find('rh').text,
                 'sky_cover': period.find('skyCover').text
             })
-    return json.dumps(results)
+    return eval(json.dumps(results))
 
 
 def parseWeather(wx):
