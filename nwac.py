@@ -62,5 +62,5 @@ def fetch():
             'snow_total_4200': int(cols[13].string)
         })
 
-    return json.dumps({'nwac_data': results})
+    return json.dumps(results)
 

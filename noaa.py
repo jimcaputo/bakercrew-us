@@ -34,7 +34,7 @@ def fetch():
 
     year = util.currentTime().strftime('%Y')
 
-    rows = []
+    results = []
     i = 0
     for day in root.findall('forecastDay'):
         for period in day.findall('period'):
@@ -48,7 +48,7 @@ def fetch():
             if forecast_time < forecast_creation_time:
                 continue
 
-            rows.append({
+            results.append({
                 'forecast_creation_time': forecast_creation_time.strftime('%Y-%m-%d %H:%M:%S'),
                 'latitude': latitude,
                 'longitude': longitude,
@@ -67,7 +67,7 @@ def fetch():
                 'relative_humidity': period.find('rh').text,
                 'sky_cover': period.find('skyCover').text
             })
-    return json.dumps({'noaa_data': rows})
+    return json.dumps(results)
 
 
 def parseWeather(wx):
@@ -79,6 +79,15 @@ def parseWeather(wx):
         return 'Chance of Snow Showers'
     elif wx == 'Chc RW':
         return 'Chance of Rain Showers'
+
+    if wx == 'SChc R':
+        return 'Slight Chance of Rain'
+    elif wx == 'SChc S':
+        return 'Slight Chance of Snow'
+    elif wx == 'SChc SW':
+        return 'Slight Chance of Snow Showers'
+    elif wx == 'SChc RW':
+        return 'Slight Chance of Rain Showers'
 
     elif wx == 'Def R':
         return 'Rain'

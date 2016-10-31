@@ -1,0 +1,32 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawTemperatureChart);
+
+    function drawTemperatureChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Time', 'Observed', 'Forecast'],
+            {% for row in nwac_data %}
+            ['{{row.nwac_time_display}}', {{row.temperature_4200}}, null],
+            {% endfor %}
+            {% for row in noaa_data %}
+            ['{{row.forecast_time}}', null, {{row.temperature}}],
+            {% endfor %}
+        ]);
+
+        var options = {
+            title: 'Temperature 4200 ft',
+            legend: {position: 'bottom'},
+            hAxis: {
+                showTextEvery: 3,
+                slantedText: true
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('temperature_chart'));
+        chart.draw(data, options);
+    }
+</script>
+
+<div id="temperature_chart" style="width: 800px; height: 500px"></div>
